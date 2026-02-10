@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.env
+venv/
+.venv/
+env/
+*.log
+*.sqlite3
+migrations/
+
+# Poetry
+poetry.lock
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+*.pid
+*.db
+*.sock
+*.tar
+*.bak
+docker-compose.override.yml
+__pycache__/
+.env*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/*

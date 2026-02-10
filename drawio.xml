@@ -1,0 +1,180 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36" version="29.1.0">
+  <diagram id="control-flow" name="控制逻辑流程">
+    <mxGraphModel dx="2878" dy="826" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1600" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-9" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="9R2TZ--sHJDNkin3t4PC-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-10" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="9R2TZ--sHJDNkin3t4PC-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-11" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="9R2TZ--sHJDNkin3t4PC-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-12" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="9R2TZ--sHJDNkin3t4PC-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-13" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="9R2TZ--sHJDNkin3t4PC-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="程序执行" vertex="1">
+          <mxGeometry height="60" width="120" x="-70" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-15" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="9R2TZ--sHJDNkin3t4PC-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Modbus 485通讯模块" vertex="1">
+          <mxGeometry height="60" width="120" x="130" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-23" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-22" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="控制算法模块" vertex="1">
+          <mxGeometry height="60" width="120" x="130" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-21" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-20" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="CT API请求模块" vertex="1">
+          <mxGeometry height="60" width="120" x="130" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-44" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-43" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="预测算法+聚合统计模块" vertex="1">
+          <mxGeometry height="60" width="120" x="130" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="日志模块" vertex="1">
+          <mxGeometry height="60" width="120" x="130" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-17" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-16" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="建立Modbus RTU通讯" vertex="1">
+          <mxGeometry height="60" width="120" x="310" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-19" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-18" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-16" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="循环请求1～6热泵数据" vertex="1">
+          <mxGeometry height="60" width="120" x="490" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-29" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="9R2TZ--sHJDNkin3t4PC-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-39" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="9R2TZ--sHJDNkin3t4PC-40">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-18" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="更新热泵数据缓存" vertex="1">
+          <mxGeometry height="60" width="120" x="670" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-24" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;jumpStyle=arc;" target="9R2TZ--sHJDNkin3t4PC-22">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="880" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-20" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="请求CT现场电流数据" vertex="1">
+          <mxGeometry height="60" width="120" x="310" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-26" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-25" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-22" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="拉取最新电流数据" vertex="1">
+          <mxGeometry height="60" width="120" x="810" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-28" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-27" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-25" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="根据电流数据，估算每台热泵可用电流配额" vertex="1">
+          <mxGeometry height="60" width="120" x="1010" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-31" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-30" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-27" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="根据热泵当前总电流与配额电流差异计算" vertex="1">
+          <mxGeometry height="60" width="120" x="1010" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-33" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-32" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-34" connectable="0" parent="9R2TZ--sHJDNkin3t4PC-33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Y" vertex="1">
+          <mxGeometry relative="1" x="-0.4" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-47" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-46" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-48" connectable="0" parent="9R2TZ--sHJDNkin3t4PC-47" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="N" vertex="1">
+          <mxGeometry relative="1" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-30" parent="1" style="rhombus;whiteSpace=wrap;html=1;rounded=0;" value="当前一台热泵总电流&amp;gt;配额？" vertex="1">
+          <mxGeometry height="80" width="160" x="990" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-36" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-35" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-32" parent="1" style="rhombus;whiteSpace=wrap;html=1;rounded=0;" value="是否在容忍范围内" vertex="1">
+          <mxGeometry height="80" width="160" x="990" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-38" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-37" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="计算降功需要的压缩机数目" vertex="1">
+          <mxGeometry height="60" width="120" x="1010" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-37" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="写入Modbus" vertex="1">
+          <mxGeometry height="60" width="120" x="810" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-45" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="9R2TZ--sHJDNkin3t4PC-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="更新最新的热泵压缩机电量" vertex="1">
+          <mxGeometry height="60" width="120" x="670" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-55" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-54" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-43" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="拉取记录数据，聚合计算平均热泵压缩机运行电流和启动时浪涌电流" vertex="1">
+          <mxGeometry height="60" width="120" x="490" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-50" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="9R2TZ--sHJDNkin3t4PC-49" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-46" parent="1" style="rhombus;whiteSpace=wrap;html=1;rounded=0;" value="当前一台热泵总电流&amp;lt;配额？" vertex="1">
+          <mxGeometry height="80" width="160" x="1230" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-59" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="9R2TZ--sHJDNkin3t4PC-57">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-49" parent="1" style="rhombus;whiteSpace=wrap;html=1;rounded=0;" value="是否在耐心范围内" vertex="1">
+          <mxGeometry height="80" width="160" x="1230" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-56" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="9R2TZ--sHJDNkin3t4PC-37">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-51" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="计算升功率需要的压缩机数目" vertex="1">
+          <mxGeometry height="60" width="120" x="810" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-58" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;jumpStyle=arc;" target="9R2TZ--sHJDNkin3t4PC-57">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-54" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="输出预估的每台热泵平均压缩机运行电流和浪涌电流" vertex="1">
+          <mxGeometry height="60" width="120" x="490" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-60" edge="1" parent="1" source="9R2TZ--sHJDNkin3t4PC-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="9R2TZ--sHJDNkin3t4PC-51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9R2TZ--sHJDNkin3t4PC-57" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="考虑浪涌和平均运行电流后是否在配额内？" vertex="1">
+          <mxGeometry height="60" width="120" x="1250" y="550" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

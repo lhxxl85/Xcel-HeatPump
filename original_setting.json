@@ -1,0 +1,26 @@
+{
+  "1": {
+    "heating_setpoint": 60.0,
+    "hysteresis_value": 5.0
+  },
+  "2": {
+    "heating_setpoint": 60.0,
+    "hysteresis_value": 5.0
+  },
+  "3": {
+    "heating_setpoint": 60.0,
+    "hysteresis_value": 5.0
+  },
+  "4": {
+    "heating_setpoint": 60.0,
+    "hysteresis_value": 5.0
+  },
+  "5": {
+    "heating_setpoint": 60.0,
+    "hysteresis_value": 5.0
+  },
+  "6": {
+    "heating_setpoint": 60.0,
+    "hysteresis_value": 5.0
+  }
+}
