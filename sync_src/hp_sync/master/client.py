@@ -83,7 +83,7 @@ class ModbusConfig:
     # 针对热泵：分成多个连续读取块，减少Modbus调用次数
     hp_register_blocks: tuple[tuple[int, int], ...] = (
         (0x0000, 46),  # 0x0000～0x002D
-        (0x006D, 0x0091 - 0x0079 + 1),  # 0x0079～0x0091
+        (0x006D, 0x0091 - 0x006D + 1),  # 0x0079～0x0091
     )
     # 针对CT：仍然从7号地址开始读取, 但是就只有一个寄存器
     ct_start_address: int = 13
