@@ -172,6 +172,7 @@ import { APP_CONFIG } from './config'
 import { buildBitRegisterPanels, isBitRegisterAddress, setBitValue } from './bit-registers'
 import { displayRegisterName } from './register-labels'
 const STATUS_REQUEST_TIMEOUT_MS = 3000
+const STATUS_REFRESH_INTERVAL_MS = 500
 
 const I18N = {
   en: {
@@ -397,9 +398,9 @@ export default {
           this.stopAutoRefresh()
           return
         }
-        this.refreshTimer = setTimeout(tick, 0)
+        this.refreshTimer = setTimeout(tick, STATUS_REFRESH_INTERVAL_MS)
       }
-      this.refreshTimer = setTimeout(tick, 0)
+      this.refreshTimer = setTimeout(tick, STATUS_REFRESH_INTERVAL_MS)
     },
     stopAutoRefresh() {
       if (this.refreshTimer) {
