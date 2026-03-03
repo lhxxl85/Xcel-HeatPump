@@ -95,6 +95,7 @@ class AppSettings(BaseSettings):
 
     redis: RedisSettings = Field(default_factory=RedisSettings)
     redis_sync_interval_sec: float = 0.5
+    command_poll_interval_sec: float = 0.1
     data_stale_after_sec: float = 3.0
     hp_device_name: str = "heatpump"
     ct_device_name: str = "ct"

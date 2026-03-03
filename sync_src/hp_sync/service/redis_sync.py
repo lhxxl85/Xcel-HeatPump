@@ -9,6 +9,7 @@ from typing import Any, Mapping
 import redis
 
 from register_i18n import to_english_register_name
+from sync_src.hp_sync.master.register_mapping import HP_REGISTER_MAP
 
 
 @dataclass
@@ -211,6 +212,40 @@ class RedisWriter:
             return True
         except Exception as exc:  # noqa: BLE001
             self.logger.error("Redis clear command failed for %s: %s", key, exc)
+            self._client = None
+            return False
+
+    def update_written_register_value(
+        self,
+        *,
+        hp_device_name: str,
+        device_id: int,
+        address: int,
+        value: int,
+    ) -> bool:
+        if not self._ensure_connection() or self._client is None:
+            return False
+        register_name = HP_REGISTER_MAP.get(address)
+        if register_name is None:
+            self.logger.warning(
+                "Cannot update redis register cache for heatpump:%s, unknown register address=0x%04X",
+                device_id,
+                address,
+            )
+            return False
+
+        english_name = to_english_register_name(register_name)
+        key = f"{hp_device_name}:{device_id}:{english_name}"
+        if self.config.key_prefix:
+            key = f"{self.config.key_prefix}{key}"
+        try:
+            if self.config.key_ttl_sec > 0:
+                self._client.set(name=key, value=value, ex=self.config.key_ttl_sec)
+            else:
+                self._client.set(name=key, value=value)
+            return True
+        except Exception as exc:  # noqa: BLE001
+            self.logger.error("Redis update written register failed for %s: %s", key, exc)
             self._client = None
             return False
 

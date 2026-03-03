@@ -171,6 +171,7 @@
 import { APP_CONFIG } from './config'
 import { buildBitRegisterPanels, isBitRegisterAddress, setBitValue } from './bit-registers'
 import { displayRegisterName } from './register-labels'
+const STATUS_REQUEST_TIMEOUT_MS = 3000
 
 const I18N = {
   en: {
@@ -244,6 +245,7 @@ export default {
       commStatusUnchangedCount: {},
       statusCache: {},
       refreshTimer: null,
+      statusRequestInFlight: false,
       writeLocked: false,
       writeLockTabKey: '',
       writeLockBaseline: null
@@ -385,15 +387,23 @@ export default {
     },
     startAutoRefresh() {
       this.stopAutoRefresh()
-      this.refreshTimer = setInterval(() => {
-        if (this.page === 'dashboard') {
-          this.loadStatus()
+      const tick = async () => {
+        if (this.page !== 'dashboard') {
+          this.stopAutoRefresh()
+          return
         }
-      }, 2000)
+        await this.loadStatus()
+        if (this.page !== 'dashboard') {
+          this.stopAutoRefresh()
+          return
+        }
+        this.refreshTimer = setTimeout(tick, 0)
+      }
+      this.refreshTimer = setTimeout(tick, 0)
     },
     stopAutoRefresh() {
       if (this.refreshTimer) {
-        clearInterval(this.refreshTimer)
+        clearTimeout(this.refreshTimer)
         this.refreshTimer = null
       }
     },
@@ -436,11 +446,18 @@ export default {
       if (!this.currentTab) {
         return
       }
+      if (this.statusRequestInFlight) {
+        return
+      }
+      this.statusRequestInFlight = true
       this.loading = true
       this.errorMessage = ''
+      let timeoutHandle = null
+      const controller = new AbortController()
       try {
         const url = `${this.apiBaseUrl}/api/v1/${this.currentTab.type}/${this.currentTab.id}/status?lang=${this.lang}`
-        const response = await fetch(url)
+        timeoutHandle = setTimeout(() => controller.abort(), STATUS_REQUEST_TIMEOUT_MS)
+        const response = await fetch(url, { signal: controller.signal })
         const payload = await response.json()
         if (!response.ok || !payload.success) {
           this.errorMessage = payload.message || 'Request failed'
@@ -474,12 +491,20 @@ export default {
         }
         this.statusItems = items
       } catch (error) {
-        this.errorMessage = `Network error: ${error}`
+        if (error && error.name === 'AbortError') {
+          this.errorMessage = `Request timeout after ${STATUS_REQUEST_TIMEOUT_MS / 1000}s`
+        } else {
+          this.errorMessage = `Network error: ${error}`
+        }
         if (this.statusItems.length === 0) {
           this.commOnline = false
           this.currentCommStatus = -1
         }
       } finally {
+        if (timeoutHandle) {
+          clearTimeout(timeoutHandle)
+        }
+        this.statusRequestInFlight = false
         this.loading = false
       }
     },

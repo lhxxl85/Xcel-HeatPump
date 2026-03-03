@@ -90,6 +90,7 @@ class ModbusConfig:
     ct_register_count: int = 6
     poll_interval_sec: float = 0.5
     reconnect_interval_sec: float = 3.0
+    request_gap_sec: float = 0.2
 
     @property
     def hp_slave_ids(self) -> tuple[int, ...]:
@@ -116,14 +117,18 @@ class ModbusShareState:
         if len(registers) == 0:
             return
         with self.lock:
-            self.hp_data[slave_id] = dict(registers)
+            merged = dict(self.hp_data.get(slave_id, {}))
+            merged.update(registers)
+            self.hp_data[slave_id] = merged
             self.hp_updated_at[slave_id] = time.monotonic()
 
     def update_ct_slave(self, slave_id: int, registers: Mapping[str, int]) -> None:
         if len(registers) == 0:
             return
         with self.lock:
-            self.ct_data[slave_id] = dict(registers)
+            merged = dict(self.ct_data.get(slave_id, {}))
+            merged.update(registers)
+            self.ct_data[slave_id] = merged
             self.ct_updated_at[slave_id] = time.monotonic()
 
     def get_snapshot(self) -> Dict[int, Dict[str, int]]:
@@ -215,9 +220,12 @@ class ModbusMaster:
         self._hp_poll_thread: Optional[threading.Thread] = None
         self._ct_poll_thread: Optional[threading.Thread] = None
         self._last_reconnect_attempt_ts: dict[int, float] = {}
+        self._last_response_ts_by_client: dict[int, float] = {}
         self._hp_comm_status: dict[int, int] = {}
         self._ct_comm_status: dict[int, int] = {}
         self._comm_status_lock = threading.Lock()
+        self._hp_io_lock = threading.RLock()
+        self._hp_poll_pause_event = threading.Event()
 
         # 构建一个从站ID列表
         self.slave_ids = list(self.config.hp_slave_ids) + [self.config.ct_slave_id]
@@ -454,6 +462,30 @@ class ModbusMaster:
                 )
         return registers
 
+    def _wait_request_gap(self, client: ModbusTcpClient | ModbusSerialClient) -> None:
+        gap = max(0.0, float(self.config.request_gap_sec))
+        if gap <= 0.0:
+            return
+        key = id(client)
+        now = time.monotonic()
+        last_response_ts = self._last_response_ts_by_client.get(key)
+        if last_response_ts is None:
+            return
+        remain = gap - (now - last_response_ts)
+        if remain > 0:
+            time.sleep(remain)
+
+    def _mark_response_received(
+        self, client: ModbusTcpClient | ModbusSerialClient
+    ) -> None:
+        self._last_response_ts_by_client[id(client)] = time.monotonic()
+
+    def pause_hp_polling(self) -> None:
+        self._hp_poll_pause_event.set()
+
+    def resume_hp_polling(self) -> None:
+        self._hp_poll_pause_event.clear()
+
     # ---------------------------------------------------------------------------
     # 轮循读取
     # ---------------------------------------------------------------------------
@@ -528,10 +560,17 @@ class ModbusMaster:
                 continue
 
             for slave_id in slave_ids:
+                if self._hp_poll_pause_event.is_set():
+                    self.logger.debug("HP polling paused, skip remaining HP reads in current cycle")
+                    return
+
                 try:
                     hp_registers: Dict[str, int] = {}
                     slave_ok = True
                     for start_address, count in self.config.hp_register_blocks:
+                        if self._hp_poll_pause_event.is_set():
+                            return
+
                         self.logger.info(
                             "Reading HP slave %s on bus %s (addr=0x%04X, count=%s)",
                             slave_id,
@@ -539,11 +578,14 @@ class ModbusMaster:
                             start_address,
                             count,
                         )
-                        response = client.read_holding_registers(
-                            address=start_address,
-                            count=count,
-                            device_id=slave_id,
-                        )
+                        with self._hp_io_lock:
+                            self._wait_request_gap(client)
+                            response = client.read_holding_registers(
+                                address=start_address,
+                                count=count,
+                                device_id=slave_id,
+                            )
+                            self._mark_response_received(client)
 
                         if response is None:
                             self.logger.error(
@@ -657,6 +699,10 @@ class ModbusMaster:
     def _polling_loop_hp(self) -> None:
         """后台轮循线程的主循环，定期读取HP数据"""
         while not self._stop_event.is_set():  # pragma: no cover
+            if self._hp_poll_pause_event.is_set():
+                if self._stop_event.wait(0.02):
+                    break
+                continue
             try:
                 self.read_hp_once()
             except Exception as e:  # noqa: BLE001
@@ -702,17 +748,23 @@ class ModbusMaster:
             return False
 
         try:
-            response = hp_client.write_register(
-                address=register_address,
-                value=value,
-                device_id=slave_id,
-            )
+            with self._hp_io_lock:
+                self._wait_request_gap(hp_client)
+                response = hp_client.write_register(
+                    address=register_address,
+                    value=value,
+                    device_id=slave_id,
+                )
+                self._mark_response_received(hp_client)
             if isinstance(response, ModbusException) or response.isError():
                 self.logger.error(
                     f"Modbus write error to slave {slave_id}, register {register_address}: {response}"
                 )
                 return False
 
+            register_name = HP_REGISTER_MAP.get(register_address)
+            if register_name:
+                self.shared_state.update_hp_slave(slave_id, {register_name: value})
             self.logger.debug(
                 f"Wrote to slave {slave_id}, register {register_address}: {value}"
             )

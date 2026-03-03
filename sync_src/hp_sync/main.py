@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import signal
 import threading
+import time
 
 from sync_src.hp_sync.master.client import (
     HpBusConfig,
@@ -95,6 +96,7 @@ def main() -> int:
         ct_slave_id=settings.ct_id,
         poll_interval_sec=settings.poll_interval_sec,
         reconnect_interval_sec=settings.reconnect_interval_sec,
+        request_gap_sec=0.2,
         control_mode=True,
     )
 
@@ -146,81 +148,104 @@ def main() -> int:
     master.start_polling()
 
     try:
+        next_redis_sync_ts = 0.0
+        next_command_poll_ts = 0.0
         while not stop_event.is_set():
-            hp_snapshot, ct_snapshot = master.shared_state.get_fresh_partitioned_snapshot(
-                max_age_sec=settings.data_stale_after_sec
-            )
-            ok = redis_writer.write_partitioned_snapshot(
-                hp_snapshot,
-                ct_snapshot,
-                hp_device_name=settings.hp_device_name,
-                ct_device_name=settings.ct_device_name,
-            )
-            if not ok:
-                logger.warning("Redis sync not successful in this cycle")
+            now = time.monotonic()
+            command_interval = max(settings.command_poll_interval_sec, 0.01)
+            sync_interval = max(settings.redis_sync_interval_sec, 0.01)
 
-            comm_status = master.get_comm_status_snapshot()
-            hp_comm_status = {
-                hp_id: comm_status.get("hp", {}).get(hp_id, -1)
-                for hp_id in settings.hp_ids
-            }
-            ct_comm_status = {
-                settings.ct_id: comm_status.get("ct", {}).get(settings.ct_id, -1)
-            }
-            comm_ok = redis_writer.write_comm_status(
-                hp_status=hp_comm_status,
-                ct_status=ct_comm_status,
-                hp_device_name=settings.hp_device_name,
-                ct_device_name=settings.ct_device_name,
-            )
-            if not comm_ok:
-                logger.warning("Redis comm_status sync not successful in this cycle")
-
-            commands = redis_writer.fetch_write_commands(
-                hp_slave_ids=settings.hp_ids,
-                hp_device_name=settings.hp_device_name,
-            )
-            for device_id, cmd in commands.items():
-                address = cmd["address"]
-                value = cmd["value"]
-
-                if address > 0x006D:
-                    redis_writer.clear_write_command(
-                        hp_device_name=settings.hp_device_name,
-                        device_id=device_id,
-                    )
-                    logger.warning(
-                        "Ignored write command for heatpump:%s (address=0x%04X > 0x006D), command cleared",
-                        device_id,
-                        address,
-                    )
-                    continue
-
-                write_ok = master.write_register(
-                    slave_id=device_id,
-                    register_address=address,
-                    value=value,
+            if now >= next_command_poll_ts:
+                next_command_poll_ts = now + command_interval
+                commands = redis_writer.fetch_write_commands(
+                    hp_slave_ids=settings.hp_ids,
+                    hp_device_name=settings.hp_device_name,
                 )
-                if write_ok:
-                    redis_writer.clear_write_command(
-                        hp_device_name=settings.hp_device_name,
-                        device_id=device_id,
-                    )
-                    logger.info(
-                        "Write command applied and cleared for heatpump:%s (address=0x%04X value=%s)",
-                        device_id,
-                        address,
-                        value,
-                    )
-                else:
-                    logger.warning(
-                        "Write command failed for heatpump:%s (address=0x%04X value=%s), command retained",
-                        device_id,
-                        address,
-                        value,
-                    )
+                if commands:
+                    master.pause_hp_polling()
+                    try:
+                        for device_id, cmd in commands.items():
+                            address = cmd["address"]
+                            value = cmd["value"]
 
-            if stop_event.wait(settings.redis_sync_interval_sec):
+                            if address > 0x006D:
+                                redis_writer.clear_write_command(
+                                    hp_device_name=settings.hp_device_name,
+                                    device_id=device_id,
+                                )
+                                logger.warning(
+                                    "Ignored write command for heatpump:%s (address=0x%04X > 0x006D), command cleared",
+                                    device_id,
+                                    address,
+                                )
+                                continue
+
+                            write_ok = master.write_register(
+                                slave_id=device_id,
+                                register_address=address,
+                                value=value,
+                            )
+                            if write_ok:
+                                redis_writer.update_written_register_value(
+                                    hp_device_name=settings.hp_device_name,
+                                    device_id=device_id,
+                                    address=address,
+                                    value=value,
+                                )
+                                redis_writer.clear_write_command(
+                                    hp_device_name=settings.hp_device_name,
+                                    device_id=device_id,
+                                )
+                                logger.info(
+                                    "Write command applied and cleared for heatpump:%s (address=0x%04X value=%s)",
+                                    device_id,
+                                    address,
+                                    value,
+                                )
+                            else:
+                                logger.warning(
+                                    "Write command failed for heatpump:%s (address=0x%04X value=%s), command retained",
+                                    device_id,
+                                    address,
+                                    value,
+                                )
+                    finally:
+                        master.resume_hp_polling()
+
+            if now >= next_redis_sync_ts:
+                next_redis_sync_ts = now + sync_interval
+                hp_snapshot, ct_snapshot = master.shared_state.get_fresh_partitioned_snapshot(
+                    max_age_sec=settings.data_stale_after_sec
+                )
+                ok = redis_writer.write_partitioned_snapshot(
+                    hp_snapshot,
+                    ct_snapshot,
+                    hp_device_name=settings.hp_device_name,
+                    ct_device_name=settings.ct_device_name,
+                )
+                if not ok:
+                    logger.warning("Redis sync not successful in this cycle")
+
+                comm_status = master.get_comm_status_snapshot()
+                hp_comm_status = {
+                    hp_id: comm_status.get("hp", {}).get(hp_id, -1)
+                    for hp_id in settings.hp_ids
+                }
+                ct_comm_status = {
+                    settings.ct_id: comm_status.get("ct", {}).get(settings.ct_id, -1)
+                }
+                comm_ok = redis_writer.write_comm_status(
+                    hp_status=hp_comm_status,
+                    ct_status=ct_comm_status,
+                    hp_device_name=settings.hp_device_name,
+                    ct_device_name=settings.ct_device_name,
+                )
+                if not comm_ok:
+                    logger.warning("Redis comm_status sync not successful in this cycle")
+
+            wait_until = min(next_redis_sync_ts, next_command_poll_ts)
+            wait_sec = max(0.01, wait_until - time.monotonic())
+            if stop_event.wait(wait_sec):
                 break
     finally:
         master.stop_polling()
