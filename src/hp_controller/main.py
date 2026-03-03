@@ -7,42 +7,12 @@ import signal
 import threading
 from typing import Optional
 
-from src.hp_controller.master.client import (
-    ModbusConfig,
-    ModbusEndpointConfig,
-    ModbusRtuConfig,
-    ModbusTcpConfig,
-    ModbusMaster,
-)
+from src.hp_controller.master.redis_master import RedisMaster, RedisMasterConfig
 from src.hp_controller.master.algorithm import AlgorithmConfig, LoadControlAlgorithm
 from src.hp_controller.master.aggregation import Aggregation, AggregationConfig
 from src.hp_controller.settings import AppSettings
 from src.hp_controller.utils.recorder import create_default_recorder
 from src.hp_controller.utils.logging_config import setup_logging
-
-
-def _build_endpoint_config(settings: AppSettings, device: str) -> ModbusEndpointConfig:
-    if device == "hp":
-        source = settings.hp
-    else:
-        source = settings.ct
-
-    return ModbusEndpointConfig(
-        transport=source.transport,
-        tcp=ModbusTcpConfig(
-            host=source.tcp.host,
-            port=source.tcp.port,
-            timeout_sec=source.tcp.timeout_sec,
-        ),
-        rtu=ModbusRtuConfig(
-            port=source.rtu.port,
-            baudrate=source.rtu.baudrate,
-            parity=source.rtu.parity,
-            stopbits=source.rtu.stopbits,
-            bytesize=source.rtu.bytesize,
-            timeout_sec=source.rtu.timeout_sec,
-        ),
-    )
 
 
 def main() -> int:
@@ -52,18 +22,25 @@ def main() -> int:
     logger = logging.getLogger("hp_controller.main")
 
     # ------------------------------------------------------------------
-    # 构建 ModbusMaster
+    # 构建 RedisMaster（读Redis快照、写Redis命令）
     # ------------------------------------------------------------------
-    master_cfg = ModbusConfig(
-        hp=_build_endpoint_config(settings, "hp"),
-        ct=_build_endpoint_config(settings, "ct"),
-        hp_slave_ids=settings.hp_ids,
+    master_cfg = RedisMasterConfig(
+        hp_slave_ids=tuple(settings.hp_ids),
         ct_slave_id=settings.ct_id,
-        poll_interval_sec=settings.poll_interval_sec,
+        hp_device_name=settings.hp_device_name,
+        ct_device_name=settings.ct_device_name,
+        host=settings.redis.host,
+        port=settings.redis.port,
+        db=settings.redis.db,
+        username=settings.redis.username,
+        password=settings.redis.password,
+        socket_timeout_sec=settings.redis.socket_timeout_sec,
+        connect_timeout_sec=settings.redis.connect_timeout_sec,
+        reconnect_interval_sec=settings.redis.reconnect_interval_sec,
+        key_prefix=settings.redis.key_prefix,
         control_mode=settings.control_mode,
     )
-    master_logger = logging.getLogger("hp_controller.master")
-    master = ModbusMaster(config=master_cfg, logger=master_logger)
+    master = RedisMaster(config=master_cfg, logger=logging.getLogger("hp_controller.master"))
 
     # ------------------------------------------------------------------
     # 构建 Algorithm
@@ -89,14 +66,11 @@ def main() -> int:
         master=master, config=algo_cfg, logger=algo_logger, recorder=recorder
     )
 
-    # 绑定算法模块到ModbusMaster
-    master.bind_algorithm(algorithm)
-
     # ------------------------------------------------------------------
     # 聚合定期任务
     # ------------------------------------------------------------------
     agg_stop_event = threading.Event()
-    aggregation_config = AggregationConfig()  # 使用默认路径，可根据需要扩展配置
+    aggregation_config = AggregationConfig()
     aggregation = Aggregation(config=aggregation_config)
 
     def aggregation_loop() -> None:  # pragma: no cover - 后台线程
@@ -126,41 +100,30 @@ def main() -> int:
     signal.signal(signal.SIGINT, handle_signal)
     signal.signal(signal.SIGTERM, handle_signal)
 
-    # ------------------------------------------------------------------
-    # 启动 Modbus 轮询和算法线程
-    # ------------------------------------------------------------------
     logger.info(
-        "Starting Modbus master (hp_ids=%s, ct_id=%d)",
+        "Starting Redis controller (hp_ids=%s, ct_id=%d)",
         settings.hp_ids,
         settings.ct_id,
     )
     logger.info("Control mode: %s", "enabled" if settings.control_mode else "disabled")
 
-    # 主动尝试连接一次（失败也没关系，轮询线程会自动重连）
     master.connect()
-    master.start_polling()
 
     logger.info("Starting load control algorithm loop")
     algorithm.start()
 
     try:
         if settings.print_state:
-            # 简单的状态打印循环
             while not stop_event.is_set():
                 snapshot = master.get_shared_state_snapshot()
                 logger.info("Current shared state: %s", snapshot)
-                # 每 5 秒打印一次
                 if stop_event.wait(5.0):
                     break
         else:
-            # 没有额外动作，只是等待退出信号
             while not stop_event.is_set():
                 if stop_event.wait(1.0):
                     break
     finally:
-        # ------------------------------------------------------------------
-        # 收尾：停止算法和 Modbus
-        # ------------------------------------------------------------------
         logger.info("Stopping algorithm...")
         algorithm.stop()
 
@@ -169,10 +132,7 @@ def main() -> int:
         if agg_thread:
             agg_thread.join(timeout=5.0)
 
-        logger.info("Stopping Modbus polling and disconnecting...")
-        master.stop_polling()
         master.disconnect()
-
         logger.info("Shutdown complete")
         return 0
 

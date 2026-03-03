@@ -1,0 +1,18 @@
+[Unit]
+Description=Xcel HeatPump Controller Service
+After=network.target redis.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=jeffrey
+Group=jeffrey
+WorkingDirectory=/home/jeffrey/Xcel-HeatPump
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/bin/bash -lc 'poetry run python -m src.hp_controller.main'
+Restart=always
+RestartSec=3
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target

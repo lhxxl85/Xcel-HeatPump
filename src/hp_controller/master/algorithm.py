@@ -11,11 +11,8 @@ from typing import Any, Dict, Iterable, Mapping, Optional
 import math
 import pandas as pd
 
-from .client import (
-    ModbusMaster,
-)
+from .redis_master import RedisMaster
 from ..utils.recorder import AlgorithmMetricsRecorder
-from .register_mapping import HP_REGISTER_MAP_REVERSE
 
 
 @dataclass
@@ -80,6 +77,8 @@ class AlgorithmConfig:
     # 观测记录CSV路径与条数上限
     stats_csv_path: str = "logs/aggregation_records.csv"
     stats_csv_limit: int = 100
+    heating_setpoint_register_address: int = 0x0004
+    hysteresis_register_address: int = 0x0003
 
 
 class LoadControlAlgorithm:
@@ -94,7 +93,7 @@ class LoadControlAlgorithm:
 
     def __init__(
         self,
-        master: ModbusMaster,
+        master: RedisMaster,
         config: Optional[AlgorithmConfig] = None,
         logger: Optional[logging.Logger] = None,
         recorder: Optional[AlgorithmMetricsRecorder] = None,
@@ -126,6 +125,7 @@ class LoadControlAlgorithm:
         self.aggregation_result: Dict[str, Any] = {}
         # 观测记录缓存
         self._stats_df: Optional[pd.DataFrame] = None
+        self._prev_comm_status: dict[str, dict[int, int]] = {"hp": {}, "ct": {}}
 
     # -------------------------------------------------------
     # 线程控制
@@ -165,6 +165,11 @@ class LoadControlAlgorithm:
         """
         while not self._stop_event.is_set():  # pragma: no cover
             try:
+                comm_status = self.master.get_comm_status_snapshot()
+                if not self._is_comm_status_healthy(comm_status):
+                    if self._stop_event.wait(self.config.loop_interval_sec):
+                        break
+                    continue
                 snapshot = self.master.get_shared_state_snapshot()
                 self._ensure_original_settings(snapshot)
                 self._step(snapshot)
@@ -175,6 +180,90 @@ class LoadControlAlgorithm:
 
             if self._stop_event.wait(self.config.loop_interval_sec):
                 break
+
+    def _is_comm_status_healthy(self, current: Mapping[str, Mapping[int, int]]) -> bool:
+        hp_current = current.get("hp", {})
+        ct_current = current.get("ct", {})
+        hp_prev = self._prev_comm_status.get("hp", {})
+        ct_prev = self._prev_comm_status.get("ct", {})
+
+        for hp_id in self.config.hp_slave_ids:
+            cur = hp_current.get(int(hp_id), -1)
+            if cur < 0:
+                self.logger.warning("HP %s comm_status=%s, pause control", hp_id, cur)
+                return False
+            prev = hp_prev.get(int(hp_id))
+            if prev is not None and prev == cur:
+                self.logger.warning(
+                    "HP %s comm_status not advanced (%s), pause control",
+                    hp_id,
+                    cur,
+                )
+                return False
+
+        ct_id = int(self.config.ct_slave_id)
+        ct_cur = ct_current.get(ct_id, -1)
+        if ct_cur < 0:
+            self.logger.warning("CT %s comm_status=%s, pause control", ct_id, ct_cur)
+            return False
+        ct_prev_value = ct_prev.get(ct_id)
+        if ct_prev_value is not None and ct_prev_value == ct_cur:
+            self.logger.warning(
+                "CT %s comm_status not advanced (%s), pause control",
+                ct_id,
+                ct_cur,
+            )
+            return False
+
+        self._prev_comm_status = {
+            "hp": {int(k): int(v) for k, v in hp_current.items()},
+            "ct": {int(k): int(v) for k, v in ct_current.items()},
+        }
+        return True
+
+    def _refresh_current_budget_from_snapshot(
+        self,
+        snapshot: Mapping[int, Mapping[str, int | float]],
+        hp_status: Mapping[int, Mapping[str, float]],
+    ) -> bool:
+        ct_regs = snapshot.get(self.config.ct_slave_id)
+        if not ct_regs:
+            self.logger.warning("CT slave %s data not available", self.config.ct_slave_id)
+            return False
+
+        raw_total_current = ct_regs.get("total_current")
+        if raw_total_current is None:
+            raw_total_current = (
+                float(ct_regs.get("current_l1", 0.0))
+                + float(ct_regs.get("current_l2", 0.0))
+                + float(ct_regs.get("current_l3", 0.0))
+            )
+
+        try:
+            self.ct_total_current = float(raw_total_current)
+        except Exception:  # noqa: BLE001
+            self.logger.warning("Invalid CT total_current=%s", raw_total_current)
+            return False
+
+        hp_total_current_sum = sum(
+            status["hp_total_current"] for status in hp_status.values()
+        )
+        self.hp_total_currents = {
+            int(hp_id): status["hp_total_current"]
+            for hp_id, status in hp_status.items()
+        }
+
+        other_load_current = max(0.0, self.ct_total_current - hp_total_current_sum)
+        self.ct_other_current = other_load_current
+        self.load_available_current = max(
+            0.0, self.config.protection_current_limit - other_load_current
+        )
+        self.heatpump_available_current_avg = max(
+            0.0,
+            (self.load_available_current - self.config.safe_margin_current)
+            / max(1, len(tuple(self.config.hp_slave_ids))),
+        )
+        return True
 
     # -------------------------------------------------------
     # 云端CT电流更新入口
@@ -231,7 +320,7 @@ class LoadControlAlgorithm:
     # -------------------------------------------------------
     # 单步控制逻辑
     # -------------------------------------------------------
-    def _step(self, snapshot: Mapping[int, Mapping[str, int]]) -> None:
+    def _step(self, snapshot: Mapping[int, Mapping[str, int | float]]) -> None:
         """
         读取CT和HP状态快照，执行单步控制逻辑
         """
@@ -239,9 +328,6 @@ class LoadControlAlgorithm:
             self.logger.warning(
                 "Original settings not ready, skip control step for now"
             )
-            return
-        if self.ct_total_current is None:
-            self.logger.warning("CT total current not updated yet, skip control step")
             return
 
         # 统计当前所有热泵压缩机开机数量
@@ -251,16 +337,16 @@ class LoadControlAlgorithm:
             self.logger.warning("No heat pump data available")  # pragma: no cover
             return
 
+        if not self._refresh_current_budget_from_snapshot(snapshot, hp_status):
+            self.logger.warning("CT current data not ready, skip control step")
+            return
+
         total_compressors_on = sum(
             status["compressors_on"] for status in hp_status.values()
         )
         hp_total_current_sum = sum(
             status["hp_total_current"] for status in hp_status.values()
         )
-        self.hp_total_currents = {
-            int(hp_id): status["hp_total_current"]
-            for hp_id, status in hp_status.items()
-        }
 
         # 配额在 update_ct_total_current 中计算，这里只用当前电流与既定配额计算目标
         heatpump_available_current_avg = self.heatpump_available_current_avg or 0.0
@@ -360,7 +446,7 @@ class LoadControlAlgorithm:
     # -------------------------------------------------------
     def _collect_hp_status(
         self,
-        snapshot: Mapping[int, Mapping[str, int]],
+        snapshot: Mapping[int, Mapping[str, int | float]],
     ) -> Dict[int, Dict[str, float]]:
         """
         收集所有热泵的状态信息
@@ -528,7 +614,7 @@ class LoadControlAlgorithm:
     def _apply_hp_targets(
         self,
         per_hp_target: Mapping[int, int],
-        snapshot: Mapping[int, Mapping[str, int]],
+        snapshot: Mapping[int, Mapping[str, int | float]],
         current_hp_status: Mapping[int, Mapping[str, float]],
         *,
         metrics_context: Optional[Mapping[str, Any]] = None,
@@ -631,9 +717,7 @@ class LoadControlAlgorithm:
                 "hysteresis_written": float(orig_hysteresis),
             }
 
-            # heating_setpoint 在 HP_REGISTER_MAP 中的地址
-            setpoint_address = HP_REGISTER_MAP_REVERSE["heating_setpoint"]
-            # hysteresis_address = HP_REGISTER_MAP["hysteresis_value"]
+            setpoint_address = self.config.heating_setpoint_register_address
 
             # 再设置heating_set
             ok_s = self.master.write_register(
@@ -645,7 +729,7 @@ class LoadControlAlgorithm:
             # hysteresis 固定不变，但是为了保证现场这个点确实是0, 也写一次
             ok_h = self.master.write_register(
                 slave_id=hp_id,
-                register_address=HP_REGISTER_MAP_REVERSE["hysteresis_value"],
+                register_address=self.config.hysteresis_register_address,
                 value=int(orig_hysteresis),
             )
 
@@ -761,7 +845,7 @@ class LoadControlAlgorithm:
 
     def _record_observation(
         self,
-        snapshot: Mapping[int, Mapping[str, int]],
+        snapshot: Mapping[int, Mapping[str, int | float]],
         ct_total_current: float,
         other_load_current: float,
     ) -> None:
@@ -795,7 +879,7 @@ class LoadControlAlgorithm:
     # 原始设定文件的处理
     # -------------------------------------------------------
     def _ensure_original_settings(
-        self, snapshot: Mapping[int, Mapping[str, int]]
+        self, snapshot: Mapping[int, Mapping[str, int | float]]
     ) -> bool:
         """
         确保 self._original_settings 已经加载：

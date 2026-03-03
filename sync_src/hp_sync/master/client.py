@@ -6,15 +6,14 @@ import logging
 import threading
 from dataclasses import dataclass, field
 import struct
-from typing import Dict, Iterable, Mapping, Optional, TYPE_CHECKING
+import time
+from typing import Dict, Iterable, Mapping, Optional, Any
 
 from pymodbus.client import ModbusTcpClient, ModbusSerialClient
 from pymodbus.exceptions import ModbusException
 
 from .register_mapping import CT_REGISTER_MAP, HP_REGISTER_MAP
-
-if TYPE_CHECKING:
-    from .algorithm import LoadControlAlgorithm
+from sync_src.hp_sync.utils.raw_modbus_logger import RawModbusFrameLogger
 
 # ---------------------------------------------------------------------------
 # Modbus 连接配置
@@ -83,8 +82,8 @@ class ModbusConfig:
     control_mode: bool = False
     # 针对热泵：分成多个连续读取块，减少Modbus调用次数
     hp_register_blocks: tuple[tuple[int, int], ...] = (
-        (0x0003, 2),  # 0x0003～0x0004
-        (0x0079, 0x0091 - 0x0079 + 1),  # 0x0079～0x0091
+        (0x0000, 46),  # 0x0000～0x002D
+        (0x006D, 0x0091 - 0x0079 + 1),  # 0x0079～0x0091
     )
     # 针对CT：仍然从7号地址开始读取, 但是就只有一个寄存器
     ct_start_address: int = 13
@@ -107,22 +106,70 @@ class ModbusShareState:
     data[slave_id][register_name] = value
     """
 
-    data: Dict[int, Dict[str, int]] = field(default_factory=dict)
+    hp_data: Dict[int, Dict[str, int]] = field(default_factory=dict)
+    hp_updated_at: Dict[int, float] = field(default_factory=dict)
+    ct_data: Dict[int, Dict[str, int]] = field(default_factory=dict)
+    ct_updated_at: Dict[int, float] = field(default_factory=dict)
     lock: threading.Lock = field(default_factory=threading.Lock)
 
-    def update_slave(self, slave_id: int, registers: Mapping[str, int]) -> None:
+    def update_hp_slave(self, slave_id: int, registers: Mapping[str, int]) -> None:
         if len(registers) == 0:
             return
         with self.lock:
-            self.data[slave_id] = dict(registers)
+            self.hp_data[slave_id] = dict(registers)
+            self.hp_updated_at[slave_id] = time.monotonic()
+
+    def update_ct_slave(self, slave_id: int, registers: Mapping[str, int]) -> None:
+        if len(registers) == 0:
+            return
+        with self.lock:
+            self.ct_data[slave_id] = dict(registers)
+            self.ct_updated_at[slave_id] = time.monotonic()
 
     def get_snapshot(self) -> Dict[int, Dict[str, int]]:
         with self.lock:
-            return {sid: regs.copy() for sid, regs in self.data.items()}
+            data: Dict[int, Dict[str, int]] = {
+                sid: regs.copy() for sid, regs in self.hp_data.items()
+            }
+            for sid, regs in self.ct_data.items():
+                data[sid] = regs.copy()
+            return data
+
+    def get_fresh_snapshot(self, max_age_sec: float) -> Dict[int, Dict[str, int]]:
+        now = time.monotonic()
+        with self.lock:
+            data: Dict[int, Dict[str, int]] = {
+                sid: regs.copy()
+                for sid, regs in self.hp_data.items()
+                if (now - self.hp_updated_at.get(sid, 0.0)) <= max_age_sec
+            }
+            for sid, regs in self.ct_data.items():
+                if (now - self.ct_updated_at.get(sid, 0.0)) <= max_age_sec:
+                    data[sid] = regs.copy()
+            return data
+
+    def get_fresh_partitioned_snapshot(
+        self, max_age_sec: float
+    ) -> tuple[Dict[int, Dict[str, int]], Dict[int, Dict[str, int]]]:
+        now = time.monotonic()
+        with self.lock:
+            hp = {
+                sid: regs.copy()
+                for sid, regs in self.hp_data.items()
+                if (now - self.hp_updated_at.get(sid, 0.0)) <= max_age_sec
+            }
+            ct = {
+                sid: regs.copy()
+                for sid, regs in self.ct_data.items()
+                if (now - self.ct_updated_at.get(sid, 0.0)) <= max_age_sec
+            }
+            return hp, ct
 
     def get_slave_registers(self, slave_id: int) -> Optional[Dict[str, int]]:
         with self.lock:
-            regs = self.data.get(slave_id)
+            regs = self.hp_data.get(slave_id)
+            if regs is None:
+                regs = self.ct_data.get(slave_id)
             if regs is not None:
                 return regs.copy()
             return None
@@ -144,9 +191,11 @@ class ModbusMaster:
         self,
         config: Optional[ModbusConfig] = None,
         logger: Optional[logging.Logger] = None,
+        raw_frame_logger: Optional[RawModbusFrameLogger] = None,
     ) -> None:
         base_logger = logger or logging.getLogger("hp_controller.master.client")
         self.logger = base_logger.getChild("ModbusMaster")
+        self.raw_frame_logger = raw_frame_logger
         self.config = config or ModbusConfig()
         self.hp_bus_clients: dict[
             str,
@@ -165,18 +214,22 @@ class ModbusMaster:
         self._stop_event = threading.Event()
         self._hp_poll_thread: Optional[threading.Thread] = None
         self._ct_poll_thread: Optional[threading.Thread] = None
+        self._last_reconnect_attempt_ts: dict[int, float] = {}
+        self._hp_comm_status: dict[int, int] = {}
+        self._ct_comm_status: dict[int, int] = {}
+        self._comm_status_lock = threading.Lock()
 
         # 构建一个从站ID列表
         self.slave_ids = list(self.config.hp_slave_ids) + [self.config.ct_slave_id]
 
-        self.algorithm: Optional["LoadControlAlgorithm"] = (
+        self.algorithm: Optional[Any] = (
             None  # 关联的算法模块 用于去更新算法模块内部状态
         )
 
     # --------------------------------------------------------------------------
     # 绑定算法模块
     # --------------------------------------------------------------------------
-    def bind_algorithm(self, algorithm: "LoadControlAlgorithm") -> None:
+    def bind_algorithm(self, algorithm: Any) -> None:
         """
         绑定一个LoadControlAlgorithm实例，用于更新算法模块的内部状态
         """
@@ -230,6 +283,7 @@ class ModbusMaster:
                 stopbits=rtu.stopbits,
                 bytesize=rtu.bytesize,
                 timeout=rtu.timeout_sec,
+                trace_packet=self._trace_packet,
             )
         else:  # pragma: no cover
             self.logger.error(
@@ -241,6 +295,12 @@ class ModbusMaster:
                 port=tcp.port,
                 timeout=tcp.timeout_sec,
             )
+
+    def _trace_packet(self, sending: bool, data: bytes) -> bytes:
+        """Trace raw RTU bytes (including CRC) for TX/RX logging."""
+        if self.raw_frame_logger is not None:
+            self.raw_frame_logger.log_frame(sending=sending, frame=data)
+        return data
 
     def _endpoint_label(self, endpoint: ModbusEndpointConfig) -> str:
         mode = endpoint.normalized_transport()
@@ -309,6 +369,13 @@ class ModbusMaster:
         if client.connected:
             return True
 
+        now = time.monotonic()
+        key = id(client)
+        last_attempt = self._last_reconnect_attempt_ts.get(key, 0.0)
+        if now - last_attempt < self.config.reconnect_interval_sec:
+            return False
+
+        self._last_reconnect_attempt_ts[key] = now
         self.logger.info(f"{label} Modbus client not connected, attempting to connect...")
         connected = client.connect()
         if connected:
@@ -333,6 +400,33 @@ class ModbusMaster:
             if name:
                 registers[name] = value
         return registers
+
+    def _mark_hp_comm_success(self, slave_id: int) -> None:
+        with self._comm_status_lock:
+            prev = self._hp_comm_status.get(slave_id, -1)
+            next_value = 0 if prev < 0 or prev >= 254 else prev + 1
+            self._hp_comm_status[slave_id] = next_value
+
+    def _mark_hp_comm_failure(self, slave_id: int) -> None:
+        with self._comm_status_lock:
+            self._hp_comm_status[slave_id] = -1
+
+    def _mark_ct_comm_success(self, slave_id: int) -> None:
+        with self._comm_status_lock:
+            prev = self._ct_comm_status.get(slave_id, -1)
+            next_value = 0 if prev < 0 or prev >= 254 else prev + 1
+            self._ct_comm_status[slave_id] = next_value
+
+    def _mark_ct_comm_failure(self, slave_id: int) -> None:
+        with self._comm_status_lock:
+            self._ct_comm_status[slave_id] = -1
+
+    def get_comm_status_snapshot(self) -> Dict[str, Dict[int, int]]:
+        with self._comm_status_lock:
+            return {
+                "hp": dict(self._hp_comm_status),
+                "ct": dict(self._ct_comm_status),
+            }
 
     def _decode_float_registers(
         self,
@@ -369,6 +463,7 @@ class ModbusMaster:
         """
         try:
             if not self._ensure_connection(self.ct_client, self.config.ct, "CT"):
+                self._mark_ct_comm_failure(self.config.ct_slave_id)
                 return
             response = self.ct_client.read_holding_registers(
                 address=self.config.ct_start_address,
@@ -380,6 +475,7 @@ class ModbusMaster:
                 self.logger.error(
                     f"Modbus read error from CT slave {self.config.ct_slave_id}: {response}"
                 )
+                self._mark_ct_comm_failure(self.config.ct_slave_id)
                 return
 
             ct_registers = self._decode_float_registers(
@@ -402,12 +498,14 @@ class ModbusMaster:
             if self.algorithm:
                 self.algorithm.update_ct_total_current(total_current)
 
-            self.shared_state.update_slave(self.config.ct_slave_id, ct_registers)
+            self.shared_state.update_ct_slave(self.config.ct_slave_id, ct_registers)
+            self._mark_ct_comm_success(self.config.ct_slave_id)
 
         except Exception as e:
             self.logger.error(
                 f"Exception while reading from CT slave {self.config.ct_slave_id}: {e}"
             )
+            self._mark_ct_comm_failure(self.config.ct_slave_id)
             try:
                 self.ct_client.close()
             except Exception:
@@ -425,11 +523,14 @@ class ModbusMaster:
                     "HP bus %s not connected, skip this bus in current cycle",
                     bus_name,
                 )
+                for slave_id in slave_ids:
+                    self._mark_hp_comm_failure(slave_id)
                 continue
 
             for slave_id in slave_ids:
                 try:
                     hp_registers: Dict[str, int] = {}
+                    slave_ok = True
                     for start_address, count in self.config.hp_register_blocks:
                         self.logger.info(
                             "Reading HP slave %s on bus %s (addr=0x%04X, count=%s)",
@@ -452,7 +553,8 @@ class ModbusMaster:
                                 start_address,
                                 count,
                             )
-                            continue
+                            slave_ok = False
+                            break
                         if isinstance(response, ModbusException) or response.isError():
                             self.logger.error(
                                 "Modbus read error from HP slave %s on bus %s (addr=0x%04X, count=%s): %s",
@@ -462,7 +564,8 @@ class ModbusMaster:
                                 count,
                                 response,
                             )
-                            continue
+                            slave_ok = False
+                            break
                         self.logger.info(
                             "Raw registers from HP slave %s on bus %s (addr=0x%04X, count=%s): %s",
                             slave_id,
@@ -478,8 +581,12 @@ class ModbusMaster:
                             )
                         )
 
-                    self.shared_state.update_slave(slave_id, hp_registers)
-                    self.logger.debug(f"Read from HP slave {slave_id}: {hp_registers}")
+                    if slave_ok and hp_registers:
+                        self.shared_state.update_hp_slave(slave_id, hp_registers)
+                        self._mark_hp_comm_success(slave_id)
+                        self.logger.debug(f"Read from HP slave {slave_id}: {hp_registers}")
+                    else:
+                        self._mark_hp_comm_failure(slave_id)
 
                 except Exception as e:
                     self.logger.error(
@@ -488,6 +595,7 @@ class ModbusMaster:
                         bus_name,
                         e,
                     )
+                    self._mark_hp_comm_failure(slave_id)
                     try:
                         client.close()
                     except Exception:

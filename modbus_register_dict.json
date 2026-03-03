@@ -1,0 +1,1970 @@
+{
+  "block_read_plan": {
+    "function_code": 3,
+    "start_address": "0x0000",
+    "end_address": "0x00A2",
+    "register_count_inclusive": 163,
+    "protocol_nominal_count_from_user": 162,
+    "note": "按含端点计算共163个地址（0~162）；若按数量162则实际结束地址应为0x00A1。"
+  },
+  "registers": [
+    {
+      "address": "0x0000",
+      "address_dec": 0,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "控制标志1"
+    },
+    {
+      "address": "0x0001",
+      "address_dec": 1,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "控制标志2"
+    },
+    {
+      "address": "0x0002",
+      "address_dec": 2,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "模式"
+    },
+    {
+      "address": "0x0003",
+      "address_dec": 3,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "空调回差"
+    },
+    {
+      "address": "0x0004",
+      "address_dec": 4,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "空调制热设置温度"
+    },
+    {
+      "address": "0x0005",
+      "address_dec": 5,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "空调制冷设置温度"
+    },
+    {
+      "address": "0x0006",
+      "address_dec": 6,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "空调自动设置温度"
+    },
+    {
+      "address": "0x0007",
+      "address_dec": 7,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "热水回差"
+    },
+    {
+      "address": "0x0008",
+      "address_dec": 8,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "水箱水温设定值"
+    },
+    {
+      "address": "0x0009",
+      "address_dec": 9,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "曲线平移"
+    },
+    {
+      "address": "0x000A",
+      "address_dec": 10,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "曲线斜率"
+    },
+    {
+      "address": "0x000B",
+      "address_dec": 11,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第一时段定时时间"
+    },
+    {
+      "address": "0x000C",
+      "address_dec": 12,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第二时段定时时间"
+    },
+    {
+      "address": "0x000D",
+      "address_dec": 13,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第三时段定时时间"
+    },
+    {
+      "address": "0x000E",
+      "address_dec": 14,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第四时段定时时间"
+    },
+    {
+      "address": "0x000F",
+      "address_dec": 15,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第1时段的制热设定温度"
+    },
+    {
+      "address": "0x0010",
+      "address_dec": 16,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第2时段的制热设定温度"
+    },
+    {
+      "address": "0x0011",
+      "address_dec": 17,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第3时段的制热设定温度"
+    },
+    {
+      "address": "0x0012",
+      "address_dec": 18,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第4时段的制热设定温度"
+    },
+    {
+      "address": "0x0013",
+      "address_dec": 19,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "允许电热开启环境温度"
+    },
+    {
+      "address": "0x0014",
+      "address_dec": 20,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "太阳能水泵启动回差设定"
+    },
+    {
+      "address": "0x0015",
+      "address_dec": 21,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "回水设定温度"
+    },
+    {
+      "address": "0x0016",
+      "address_dec": 22,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "允许补水温度"
+    },
+    {
+      "address": "0x0017",
+      "address_dec": 23,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "除霜进入盘管温度设定"
+    },
+    {
+      "address": "0x0018",
+      "address_dec": 24,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "除霜退出温度设定"
+    },
+    {
+      "address": "0x0019",
+      "address_dec": 25,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "进入除霜环境与盘管温度差"
+    },
+    {
+      "address": "0x001A",
+      "address_dec": 26,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "环温过低保护设定温"
+    },
+    {
+      "address": "0x001B",
+      "address_dec": 27,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "电子膨胀阀排气控制回差温度设定"
+    },
+    {
+      "address": "0x001C",
+      "address_dec": 28,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热目标过热度设定"
+    },
+    {
+      "address": "0x001D",
+      "address_dec": 29,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "当环境温度≥17℃，电子膨胀阀的最小开度设定"
+    },
+    {
+      "address": "0x001E",
+      "address_dec": 30,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "当环境温度＜-9℃，电子膨胀阀的最小开度"
+    },
+    {
+      "address": "0x001F",
+      "address_dec": 31,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "水箱模式、制热模式设定温上限"
+    },
+    {
+      "address": "0x0020",
+      "address_dec": 32,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "水箱和进水温度与显示温度偏差设定"
+    },
+    {
+      "address": "0x0021",
+      "address_dec": 33,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "喷液电磁阀回差设定"
+    },
+    {
+      "address": "0x0022",
+      "address_dec": 34,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "增焓电磁阀启动环温设定"
+    },
+    {
+      "address": "0x0023",
+      "address_dec": 35,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "电加热用途"
+    },
+    {
+      "address": "0x0024",
+      "address_dec": 36,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "电加热延时启动时间"
+    },
+    {
+      "address": "0x0025",
+      "address_dec": 37,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "延长除霜周期的环境温度点设置"
+    },
+    {
+      "address": "0x0026",
+      "address_dec": 38,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "预留"
+    },
+    {
+      "address": "0x0027",
+      "address_dec": 39,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "压缩机电流设定"
+    },
+    {
+      "address": "0x0028",
+      "address_dec": 40,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "除霜周期设定"
+    },
+    {
+      "address": "0x0029",
+      "address_dec": 41,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "最长除霜时间设定"
+    },
+    {
+      "address": "0x002A",
+      "address_dec": 42,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "模块调节周期"
+    },
+    {
+      "address": "0x002B",
+      "address_dec": 43,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "启动水泵环境温度设定"
+    },
+    {
+      "address": "0x002C",
+      "address_dec": 44,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "测试控制"
+    },
+    {
+      "address": "0x002D",
+      "address_dec": 45,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "机型"
+    },
+    {
+      "address": "0x002E",
+      "address_dec": 46,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "排气温度过高保护设定点"
+    },
+    {
+      "address": "0x002F",
+      "address_dec": 47,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "电子膨胀阀动作周期设定"
+    },
+    {
+      "address": "0x0030",
+      "address_dec": 48,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "膨胀阀调节时允许排气温度"
+    },
+    {
+      "address": "0x0031",
+      "address_dec": 49,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "除霜电子膨胀阀开度设定"
+    },
+    {
+      "address": "0x0032",
+      "address_dec": 50,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "当5℃≤环境温度＜17℃，电子膨胀阀的最小开度设定"
+    },
+    {
+      "address": "0x0033",
+      "address_dec": 51,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "当-2℃≤环境温度＜5℃，电子膨胀阀的最小开度设定"
+    },
+    {
+      "address": "0x0034",
+      "address_dec": 52,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "当-9℃≤环境温度＜-2℃，电子膨胀阀的最小开度设定"
+    },
+    {
+      "address": "0x0035",
+      "address_dec": 53,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "电子膨胀阀最大开度设定"
+    },
+    {
+      "address": "0x0036",
+      "address_dec": 54,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "喷液电磁阀启动排气设定"
+    },
+    {
+      "address": "0x0037",
+      "address_dec": 55,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "预留"
+    },
+    {
+      "address": "0x0038",
+      "address_dec": 56,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定1"
+    },
+    {
+      "address": "0x0039",
+      "address_dec": 57,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定2"
+    },
+    {
+      "address": "0x003A",
+      "address_dec": 58,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定3"
+    },
+    {
+      "address": "0x003B",
+      "address_dec": 59,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定4"
+    },
+    {
+      "address": "0x003C",
+      "address_dec": 60,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定5"
+    },
+    {
+      "address": "0x003D",
+      "address_dec": 61,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定6"
+    },
+    {
+      "address": "0x003E",
+      "address_dec": 62,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定7"
+    },
+    {
+      "address": "0x003F",
+      "address_dec": 63,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定8"
+    },
+    {
+      "address": "0x0040",
+      "address_dec": 64,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定9"
+    },
+    {
+      "address": "0x0041",
+      "address_dec": 65,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定10"
+    },
+    {
+      "address": "0x0042",
+      "address_dec": 66,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定11"
+    },
+    {
+      "address": "0x0043",
+      "address_dec": 67,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定12"
+    },
+    {
+      "address": "0x0044",
+      "address_dec": 68,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定1"
+    },
+    {
+      "address": "0x0045",
+      "address_dec": 69,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定2"
+    },
+    {
+      "address": "0x0046",
+      "address_dec": 70,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定3"
+    },
+    {
+      "address": "0x0047",
+      "address_dec": 71,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定4"
+    },
+    {
+      "address": "0x0048",
+      "address_dec": 72,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定5"
+    },
+    {
+      "address": "0x0049",
+      "address_dec": 73,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定6"
+    },
+    {
+      "address": "0x004A",
+      "address_dec": 74,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定7"
+    },
+    {
+      "address": "0x004B",
+      "address_dec": 75,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定8"
+    },
+    {
+      "address": "0x004C",
+      "address_dec": 76,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定9"
+    },
+    {
+      "address": "0x004D",
+      "address_dec": 77,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "限时锁机时间"
+    },
+    {
+      "address": "0x004E",
+      "address_dec": 78,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "限时锁机运行时间高位"
+    },
+    {
+      "address": "0x004F",
+      "address_dec": 79,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "限时锁机运行时间低位"
+    },
+    {
+      "address": "0x0050",
+      "address_dec": 80,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时有效控制"
+    },
+    {
+      "address": "0x0051",
+      "address_dec": 81,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时1开小时设定"
+    },
+    {
+      "address": "0x0052",
+      "address_dec": 82,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时1开分钟设定"
+    },
+    {
+      "address": "0x0053",
+      "address_dec": 83,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时1关小时设定"
+    },
+    {
+      "address": "0x0054",
+      "address_dec": 84,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时1关分钟设定"
+    },
+    {
+      "address": "0x0055",
+      "address_dec": 85,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时2开小时设定"
+    },
+    {
+      "address": "0x0056",
+      "address_dec": 86,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时2开分钟设定"
+    },
+    {
+      "address": "0x0057",
+      "address_dec": 87,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时2关小时设定"
+    },
+    {
+      "address": "0x0058",
+      "address_dec": 88,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时2关分钟设定"
+    },
+    {
+      "address": "0x0059",
+      "address_dec": 89,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时3开小时设定"
+    },
+    {
+      "address": "0x005A",
+      "address_dec": 90,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时3开分钟设定"
+    },
+    {
+      "address": "0x005B",
+      "address_dec": 91,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时3关小时设定"
+    },
+    {
+      "address": "0x005C",
+      "address_dec": 92,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时3关分钟设定"
+    },
+    {
+      "address": "0x005D",
+      "address_dec": 93,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时4开小时设定"
+    },
+    {
+      "address": "0x005E",
+      "address_dec": 94,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时4开分钟设定"
+    },
+    {
+      "address": "0x005F",
+      "address_dec": 95,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时4关小时设定"
+    },
+    {
+      "address": "0x0060",
+      "address_dec": 96,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时4关分钟设定"
+    },
+    {
+      "address": "0x0061",
+      "address_dec": 97,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时5开小时设定"
+    },
+    {
+      "address": "0x0062",
+      "address_dec": 98,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时5开分钟设定"
+    },
+    {
+      "address": "0x0063",
+      "address_dec": 99,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时5关小时设定"
+    },
+    {
+      "address": "0x0064",
+      "address_dec": 100,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时5关分钟设定"
+    },
+    {
+      "address": "0x0065",
+      "address_dec": 101,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    {
+      "address": "0x0066",
+      "address_dec": 102,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    {
+      "address": "0x0067",
+      "address_dec": 103,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    {
+      "address": "0x0068",
+      "address_dec": 104,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    {
+      "address": "0x0069",
+      "address_dec": 105,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    {
+      "address": "0x006A",
+      "address_dec": 106,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    {
+      "address": "0x006B",
+      "address_dec": 107,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    {
+      "address": "0x006C",
+      "address_dec": 108,
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    {
+      "address": "0x006D",
+      "address_dec": 109,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "输出标志1"
+    },
+    {
+      "address": "0x006E",
+      "address_dec": 110,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "输出标志2"
+    },
+    {
+      "address": "0x006F",
+      "address_dec": 111,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "输出标志3"
+    },
+    {
+      "address": "0x0070",
+      "address_dec": 112,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "运行状态"
+    },
+    {
+      "address": "0x0071",
+      "address_dec": 113,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志1"
+    },
+    {
+      "address": "0x0072",
+      "address_dec": 114,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志2"
+    },
+    {
+      "address": "0x0073",
+      "address_dec": 115,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志3"
+    },
+    {
+      "address": "0x0074",
+      "address_dec": 116,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志4"
+    },
+    {
+      "address": "0x0075",
+      "address_dec": 117,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志5"
+    },
+    {
+      "address": "0x0076",
+      "address_dec": 118,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志6"
+    },
+    {
+      "address": "0x0077",
+      "address_dec": 119,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志7"
+    },
+    {
+      "address": "0x0078",
+      "address_dec": 120,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障代号"
+    },
+    {
+      "address": "0x0079",
+      "address_dec": 121,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "进水温度"
+    },
+    {
+      "address": "0x007A",
+      "address_dec": 122,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "水箱温度"
+    },
+    {
+      "address": "0x007B",
+      "address_dec": 123,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "外环境温度"
+    },
+    {
+      "address": "0x007C",
+      "address_dec": 124,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "盘管温度"
+    },
+    {
+      "address": "0x007D",
+      "address_dec": 125,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "盘管温度2"
+    },
+    {
+      "address": "0x007E",
+      "address_dec": 126,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "盘管温度3"
+    },
+    {
+      "address": "0x007F",
+      "address_dec": 127,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "盘管温度4"
+    },
+    {
+      "address": "0x0080",
+      "address_dec": 128,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "回水温度"
+    },
+    {
+      "address": "0x0081",
+      "address_dec": 129,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "出水温度"
+    },
+    {
+      "address": "0x0082",
+      "address_dec": 130,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "回气温度"
+    },
+    {
+      "address": "0x0083",
+      "address_dec": 131,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "回气温度2"
+    },
+    {
+      "address": "0x0084",
+      "address_dec": 132,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "回气温度3"
+    },
+    {
+      "address": "0x0085",
+      "address_dec": 133,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "回气温度4"
+    },
+    {
+      "address": "0x0086",
+      "address_dec": 134,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "预留"
+    },
+    {
+      "address": "0x0087",
+      "address_dec": 135,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "预留"
+    },
+    {
+      "address": "0x0088",
+      "address_dec": 136,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "预留"
+    },
+    {
+      "address": "0x0089",
+      "address_dec": 137,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "预留"
+    },
+    {
+      "address": "0x008A",
+      "address_dec": 138,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "排气温度"
+    },
+    {
+      "address": "0x008B",
+      "address_dec": 139,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "排气温度2"
+    },
+    {
+      "address": "0x008C",
+      "address_dec": 140,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "排气温度3"
+    },
+    {
+      "address": "0x008D",
+      "address_dec": 141,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "排气温度4"
+    },
+    {
+      "address": "0x008E",
+      "address_dec": 142,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "压机1电流"
+    },
+    {
+      "address": "0x008F",
+      "address_dec": 143,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "压机2电流"
+    },
+    {
+      "address": "0x0090",
+      "address_dec": 144,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "压机3电流"
+    },
+    {
+      "address": "0x0091",
+      "address_dec": 145,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "压机4电流"
+    },
+    {
+      "address": "0x0092",
+      "address_dec": 146,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "膨胀阀高位"
+    },
+    {
+      "address": "0x0093",
+      "address_dec": 147,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "膨胀阀低位"
+    },
+    {
+      "address": "0x0094",
+      "address_dec": 148,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "2膨胀阀高位"
+    },
+    {
+      "address": "0x0095",
+      "address_dec": 149,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "2膨胀阀低位"
+    },
+    {
+      "address": "0x0096",
+      "address_dec": 150,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "3膨胀阀高位"
+    },
+    {
+      "address": "0x0097",
+      "address_dec": 151,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "3膨胀阀低位"
+    },
+    {
+      "address": "0x0098",
+      "address_dec": 152,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "4膨胀阀高位"
+    },
+    {
+      "address": "0x0099",
+      "address_dec": 153,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "4膨胀阀低位"
+    },
+    {
+      "address": "0x009A",
+      "address_dec": 154,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "压机数量"
+    },
+    {
+      "address": "0x009B",
+      "address_dec": 155,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    {
+      "address": "0x009C",
+      "address_dec": 156,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    {
+      "address": "0x009D",
+      "address_dec": 157,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    {
+      "address": "0x009E",
+      "address_dec": 158,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    {
+      "address": "0x009F",
+      "address_dec": 159,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    {
+      "address": "0x00A0",
+      "address_dec": 160,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    {
+      "address": "0x00A1",
+      "address_dec": 161,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    {
+      "address": "0x00A2",
+      "address_dec": 162,
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    }
+  ],
+  "dictionary_by_address": {
+    "0x0000": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "控制标志1"
+    },
+    "0x0001": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "控制标志2"
+    },
+    "0x0002": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "模式"
+    },
+    "0x0003": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "空调回差"
+    },
+    "0x0004": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "空调制热设置温度"
+    },
+    "0x0005": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "空调制冷设置温度"
+    },
+    "0x0006": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "空调自动设置温度"
+    },
+    "0x0007": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "热水回差"
+    },
+    "0x0008": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "水箱水温设定值"
+    },
+    "0x0009": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "曲线平移"
+    },
+    "0x000A": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "曲线斜率"
+    },
+    "0x000B": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第一时段定时时间"
+    },
+    "0x000C": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第二时段定时时间"
+    },
+    "0x000D": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第三时段定时时间"
+    },
+    "0x000E": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第四时段定时时间"
+    },
+    "0x000F": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第1时段的制热设定温度"
+    },
+    "0x0010": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第2时段的制热设定温度"
+    },
+    "0x0011": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第3时段的制热设定温度"
+    },
+    "0x0012": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "第4时段的制热设定温度"
+    },
+    "0x0013": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "允许电热开启环境温度"
+    },
+    "0x0014": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "太阳能水泵启动回差设定"
+    },
+    "0x0015": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "回水设定温度"
+    },
+    "0x0016": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "允许补水温度"
+    },
+    "0x0017": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "除霜进入盘管温度设定"
+    },
+    "0x0018": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "除霜退出温度设定"
+    },
+    "0x0019": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "进入除霜环境与盘管温度差"
+    },
+    "0x001A": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "环温过低保护设定温"
+    },
+    "0x001B": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "电子膨胀阀排气控制回差温度设定"
+    },
+    "0x001C": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热目标过热度设定"
+    },
+    "0x001D": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "当环境温度≥17℃，电子膨胀阀的最小开度设定"
+    },
+    "0x001E": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "当环境温度＜-9℃，电子膨胀阀的最小开度"
+    },
+    "0x001F": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "水箱模式、制热模式设定温上限"
+    },
+    "0x0020": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "水箱和进水温度与显示温度偏差设定"
+    },
+    "0x0021": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "喷液电磁阀回差设定"
+    },
+    "0x0022": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "增焓电磁阀启动环温设定"
+    },
+    "0x0023": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "电加热用途"
+    },
+    "0x0024": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "电加热延时启动时间"
+    },
+    "0x0025": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "延长除霜周期的环境温度点设置"
+    },
+    "0x0026": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "预留"
+    },
+    "0x0027": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "压缩机电流设定"
+    },
+    "0x0028": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "除霜周期设定"
+    },
+    "0x0029": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "最长除霜时间设定"
+    },
+    "0x002A": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "模块调节周期"
+    },
+    "0x002B": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "启动水泵环境温度设定"
+    },
+    "0x002C": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "测试控制"
+    },
+    "0x002D": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "机型"
+    },
+    "0x002E": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "排气温度过高保护设定点"
+    },
+    "0x002F": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "电子膨胀阀动作周期设定"
+    },
+    "0x0030": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "膨胀阀调节时允许排气温度"
+    },
+    "0x0031": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "除霜电子膨胀阀开度设定"
+    },
+    "0x0032": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "当5℃≤环境温度＜17℃，电子膨胀阀的最小开度设定"
+    },
+    "0x0033": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "当-2℃≤环境温度＜5℃，电子膨胀阀的最小开度设定"
+    },
+    "0x0034": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "当-9℃≤环境温度＜-2℃，电子膨胀阀的最小开度设定"
+    },
+    "0x0035": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "电子膨胀阀最大开度设定"
+    },
+    "0x0036": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "喷液电磁阀启动排气设定"
+    },
+    "0x0037": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "预留"
+    },
+    "0x0038": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定1"
+    },
+    "0x0039": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定2"
+    },
+    "0x003A": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定3"
+    },
+    "0x003B": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定4"
+    },
+    "0x003C": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定5"
+    },
+    "0x003D": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定6"
+    },
+    "0x003E": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定7"
+    },
+    "0x003F": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定8"
+    },
+    "0x0040": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定9"
+    },
+    "0x0041": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定10"
+    },
+    "0x0042": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定11"
+    },
+    "0x0043": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制热定点调膨胀阀，工况点步数设定12"
+    },
+    "0x0044": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定1"
+    },
+    "0x0045": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定2"
+    },
+    "0x0046": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定3"
+    },
+    "0x0047": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定4"
+    },
+    "0x0048": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定5"
+    },
+    "0x0049": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定6"
+    },
+    "0x004A": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定7"
+    },
+    "0x004B": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定8"
+    },
+    "0x004C": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "制冷定点调膨胀阀，各工况点步数设定9"
+    },
+    "0x004D": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "限时锁机时间"
+    },
+    "0x004E": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "限时锁机运行时间高位"
+    },
+    "0x004F": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "限时锁机运行时间低位"
+    },
+    "0x0050": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时有效控制"
+    },
+    "0x0051": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时1开小时设定"
+    },
+    "0x0052": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时1开分钟设定"
+    },
+    "0x0053": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时1关小时设定"
+    },
+    "0x0054": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时1关分钟设定"
+    },
+    "0x0055": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时2开小时设定"
+    },
+    "0x0056": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时2开分钟设定"
+    },
+    "0x0057": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时2关小时设定"
+    },
+    "0x0058": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时2关分钟设定"
+    },
+    "0x0059": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时3开小时设定"
+    },
+    "0x005A": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时3开分钟设定"
+    },
+    "0x005B": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时3关小时设定"
+    },
+    "0x005C": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时3关分钟设定"
+    },
+    "0x005D": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时4开小时设定"
+    },
+    "0x005E": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时4开分钟设定"
+    },
+    "0x005F": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时4关小时设定"
+    },
+    "0x0060": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时4关分钟设定"
+    },
+    "0x0061": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时5开小时设定"
+    },
+    "0x0062": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时5开分钟设定"
+    },
+    "0x0063": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时5关小时设定"
+    },
+    "0x0064": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "定时5关分钟设定"
+    },
+    "0x0065": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    "0x0066": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    "0x0067": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    "0x0068": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    "0x0069": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    "0x006A": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    "0x006B": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    "0x006C": {
+      "register_count": 1,
+      "access": "RW",
+      "name_zh": "参数预留"
+    },
+    "0x006D": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "输出标志1"
+    },
+    "0x006E": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "输出标志2"
+    },
+    "0x006F": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "输出标志3"
+    },
+    "0x0070": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "运行状态"
+    },
+    "0x0071": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志1"
+    },
+    "0x0072": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志2"
+    },
+    "0x0073": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志3"
+    },
+    "0x0074": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志4"
+    },
+    "0x0075": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志5"
+    },
+    "0x0076": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志6"
+    },
+    "0x0077": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障标志7"
+    },
+    "0x0078": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "故障代号"
+    },
+    "0x0079": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "进水温度"
+    },
+    "0x007A": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "水箱温度"
+    },
+    "0x007B": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "外环境温度"
+    },
+    "0x007C": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "盘管温度"
+    },
+    "0x007D": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "盘管温度2"
+    },
+    "0x007E": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "盘管温度3"
+    },
+    "0x007F": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "盘管温度4"
+    },
+    "0x0080": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "回水温度"
+    },
+    "0x0081": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "出水温度"
+    },
+    "0x0082": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "回气温度"
+    },
+    "0x0083": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "回气温度2"
+    },
+    "0x0084": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "回气温度3"
+    },
+    "0x0085": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "回气温度4"
+    },
+    "0x0086": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "预留"
+    },
+    "0x0087": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "预留"
+    },
+    "0x0088": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "预留"
+    },
+    "0x0089": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "预留"
+    },
+    "0x008A": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "排气温度"
+    },
+    "0x008B": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "排气温度2"
+    },
+    "0x008C": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "排气温度3"
+    },
+    "0x008D": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "排气温度4"
+    },
+    "0x008E": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "压机1电流"
+    },
+    "0x008F": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "压机2电流"
+    },
+    "0x0090": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "压机3电流"
+    },
+    "0x0091": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "压机4电流"
+    },
+    "0x0092": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "膨胀阀高位"
+    },
+    "0x0093": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "膨胀阀低位"
+    },
+    "0x0094": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "2膨胀阀高位"
+    },
+    "0x0095": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "2膨胀阀低位"
+    },
+    "0x0096": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "3膨胀阀高位"
+    },
+    "0x0097": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "3膨胀阀低位"
+    },
+    "0x0098": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "4膨胀阀高位"
+    },
+    "0x0099": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "4膨胀阀低位"
+    },
+    "0x009A": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "压机数量"
+    },
+    "0x009B": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    "0x009C": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    "0x009D": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    "0x009E": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    "0x009F": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    "0x00A0": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    "0x00A1": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    },
+    "0x00A2": {
+      "register_count": 1,
+      "access": "R",
+      "name_zh": "状态预留"
+    }
+  }
+}

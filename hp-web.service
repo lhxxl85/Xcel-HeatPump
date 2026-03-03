@@ -1,0 +1,17 @@
+[Unit]
+Description=Xcel HeatPump Web Dev Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=jeffrey
+Group=jeffrey
+WorkingDirectory=/home/jeffrey/Xcel-HeatPump/web-src
+ExecStart=/bin/bash -lc 'npm run serve'
+Restart=always
+RestartSec=3
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target

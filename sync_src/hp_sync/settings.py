@@ -1,5 +1,3 @@
-# 配置加载
-# src/hp_controller/settings.py
 from __future__ import annotations
 
 from typing import Iterable, Literal, Tuple
@@ -10,7 +8,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class ModbusTcpSettings(BaseModel):
     host: str = "127.0.0.1"
-    port: int = 5020
+    port: int = 502
     timeout_sec: float = 3.0
 
 
@@ -62,8 +60,9 @@ class RedisSettings(BaseModel):
     password: str | None = None
     socket_timeout_sec: float = 2.0
     connect_timeout_sec: float = 2.0
-    reconnect_interval_sec: float = 3.0
     key_prefix: str = ""
+    key_ttl_sec: int = 0
+    reconnect_interval_sec: float = 3.0
 
 
 class AppSettings(BaseSettings):
@@ -92,18 +91,16 @@ class AppSettings(BaseSettings):
 
     ct_id: int = 10
     poll_interval_sec: float = 0.5
-    algo_interval_sec: float = 1.0
-    current_limit: float = 1200.0
-    deadband: float = 50.0
-    safety_margin: float = 30.0
-    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
-    print_state: bool = False
-    aggregation_interval_sec: float = 60.0
-    log_dir: str = "logs"
-    control_mode: bool = False
+    reconnect_interval_sec: float = 3.0
+
     redis: RedisSettings = Field(default_factory=RedisSettings)
+    redis_sync_interval_sec: float = 0.5
+    data_stale_after_sec: float = 3.0
     hp_device_name: str = "heatpump"
     ct_device_name: str = "ct"
+
+    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    log_dir: str = "logs"
 
     @property
     def hp_ids(self) -> Tuple[int, ...]:
